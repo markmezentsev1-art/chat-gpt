@@ -2,7 +2,7 @@ const { z } = require('zod');
 
 const envSchema = z.object({
   NODE_ENV: z.string().min(1, 'NODE_ENV is required'),
-
+JWT_SECRET: z.string().min(1, 'JWT_SECRET is required'),
   PORT: z.string().optional().default('3000'),
 });
 
