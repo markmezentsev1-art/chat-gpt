@@ -1,4 +1,5 @@
 # chat-gpt
+
 # Express Starter
 
 Minimal Express.js starter project.
@@ -10,3 +11,7 @@ npm run dev     # development
 npm start       # production
 npm run lint    # eslint
 npm run format  # prettier
+
+
+npx prisma studio
+```

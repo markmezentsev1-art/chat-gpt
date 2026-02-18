@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
-const { env } = require('../config/env'); // TODO: использовать env из конфига, а не process.env напрямую
+const { env } = require('../config/env'); // ✅ берем переменные из нашего валидатора, а не напрямую из process.env
+
 // ❗️Пока без базы — фейковый пользователь
 const fakeUser = {
   id: 1,
@@ -8,26 +9,28 @@ const fakeUser = {
 };
 
 exports.login = async (email, password) => {
-  // 1. Проверяем email
+  // 1️⃣ Проверяем email
   if (email !== fakeUser.email) {
+    // Если email не совпадает — бросаем ошибку
     throw new Error('Invalid email or password');
   }
 
-  // 2. Проверяем пароль
+  // 2️⃣ Проверяем пароль
   if (password !== fakeUser.password) {
+    // Если пароль не совпадает — бросаем ошибку
     throw new Error('Invalid email or password');
   }
 
-  // 3. Генерируем JWT
+  // 3️⃣ Генерируем JWT с данными пользователя
   const token = jwt.sign(
     {
       id: fakeUser.id,
       email: fakeUser.email,
     },
-    process.env.JWT_SECRET,
-    { expiresIn: '1h' }
+    env.JWT_SECRET, // ✅ используем конфиг вместо process.env
+    { expiresIn: '15d' } // токен действителен 1 час
   );
 
-  // 4. "Сохраняем" — возвращаем клиенту
+  // 4️⃣ Возвращаем токен клиенту
   return token;
 };

@@ -1,28 +1,35 @@
-require('dotenv').config();
+// Подключаем dotenv для загрузки переменных окружения из .env
 
+require('dotenv').config();
+const { env } = require('./config/env'); // наш валидатор env (NODE_ENV, JWT_SECRET, PORT)
+const cors = require('cors');
+// Подключаем express
 const express = require('express');
 const app = express();
 
-//TODO: prettier неработает, нужно настроить
-// чтобы читать JSON из body
+// Позволяет читать JSON из тела запроса (req.body)
 app.use(express.json());
+app.use(cors());
 
-// маршруты
-const healthRoutes = require('./routes/health.routes');
-const authRoutes = require('./routes/auth.routes');
+// Подключаем маршруты
+const healthRoutes = require('./routes/health.routes'); // health check
+const authRoutes = require('./routes/auth.routes'); // логин/регистрация
+const chatRoutes = require('./routes/chat.routes'); // чат эндпоинты
 
 // ВСЕ эндпоинты начинаются с /api
-app.use('/api', healthRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api', healthRoutes); // GET /api/health
+app.use('/api/auth', authRoutes); // POST /api/auth/login (логин), POST /api/auth/register (регистрация)
+app.use('/api/chat', chatRoutes); // POST /api/chat/messages (авторизованный)
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+  })
+);
 
-const PORT = process.env.PORT || 3030;
-// TODO: port в конфиг, а не в коде
-// дабавь новый роут или ендпоинт POST /chat/messages, который будет получать {"message": "Hello"}  {
-//  "conversationId": "abc-123",
-//  "message": { "id": "m1", "role": "assistant", "content": "Hi!", "createdAt": "2026-02-02T12:00:00.000Z" }
-// } это должен быть авторизированый ендпоинт, нужно отправлять JWT в заголовке Authorization
+// Берём порт из конфига (env), чтобы можно было менять через .env
+const PORT = Number(env.PORT);
 
+// Запуск сервера
 app.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
-
