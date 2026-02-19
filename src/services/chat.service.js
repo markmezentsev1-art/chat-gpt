@@ -1,13 +1,13 @@
 // services/chat.service.js
 require('dotenv').config();
-const { TextDecoder } = require('util'); // Для преобразования байтов в строку
+const { TextDecoder } = require('util'); // For converting bytes to string
 const {
   BedrockRuntimeClient,
   InvokeModelCommand,
 } = require('@aws-sdk/client-bedrock-runtime');
-const { env } = require('../config/env'); // Берем данные из конфигурации
+const { env } = require('../config/env'); // Get data from configuration
 
-// Настраиваем клиент AWS Bedrock
+// Set up AWS Bedrock client
 const client = new BedrockRuntimeClient({
   region: env.AWS_REGION,
   credentials: {
@@ -17,14 +17,15 @@ const client = new BedrockRuntimeClient({
 });
 
 /**
- * Отправляем сообщение в Bedrock
+ * Send message to Bedrock
  * @param {string} message
- * @returns {Promise<string>} Ответ AI
+ * @returns {Promise<string>} AI response
  */
 async function sendMessageToAI(message) {
   try {
     const command = new InvokeModelCommand({
-      modelId: 'anthropic.claude-3-haiku-20240307-v1:0', // пример модели
+      modelId: 'anthropic.claude-3-haiku-20240307-v1:0', // example model
+      // example model
       contentType: 'application/json',
       accept: 'application/json',
       body: JSON.stringify({
@@ -38,13 +39,13 @@ async function sendMessageToAI(message) {
     const decoded = new TextDecoder().decode(response.body);
     const result = JSON.parse(decoded);
 
-    // Здесь возвращаем текст ответа модели
+    // Here we return the model's response text
     return (
       result?.completion || result?.messages?.[0]?.content || 'No response'
     );
   } catch (error) {
     console.error('Bedrock error:', error.message);
-    throw new Error('AI service unavailable'); // Можно показывать пользователю дружелюбное сообщение
+    throw new Error('AI service unavailable'); // You can show a user-friendly message
   }
 }
 

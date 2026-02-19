@@ -21,5 +21,5 @@ function authenticateJWT(req, res, next) {
   }
 }
 
-// ✅ экспортируем функцию напрямую
+// ✅ export the function directly
 module.exports = authenticateJWT;

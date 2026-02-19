@@ -1,36 +1,39 @@
 const jwt = require('jsonwebtoken');
-const { env } = require('../config/env'); // ✅ берем переменные из нашего валидатора, а не напрямую из process.env
+const bcrypt = require('bcrypt');
+const { env } = require('../config/env'); // ✅ take variables from our validator, not directly from process.env
+const userRepository = require('../repositories/user.repository');
+// ❗️For now, no database — fake user
+exports.register = async (email, password) => {
+  const existingUser = await userRepository.findByEmail(email);
 
-// ❗️Пока без базы — фейковый пользователь
-const fakeUser = {
-  id: 1,
-  email: 'test@gmail.com',
-  password: '123456', // ⚠️ только для обучения
+  if (existingUser) {
+    throw new Error('User already exists');
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  return userRepository.createUser({
+    email,
+    password: hashedPassword,
+  });
 };
 
 exports.login = async (email, password) => {
-  // 1️⃣ Проверяем email
-  if (email !== fakeUser.email) {
-    // Если email не совпадает — бросаем ошибку
+  const user = await userRepository.findByEmail(email);
+
+  if (!user) {
     throw new Error('Invalid email or password');
   }
 
-  // 2️⃣ Проверяем пароль
-  if (password !== fakeUser.password) {
-    // Если пароль не совпадает — бросаем ошибку
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
     throw new Error('Invalid email or password');
   }
 
-  // 3️⃣ Генерируем JWT с данными пользователя
-  const token = jwt.sign(
-    {
-      id: fakeUser.id,
-      email: fakeUser.email,
-    },
-    env.JWT_SECRET, // ✅ используем конфиг вместо process.env
-    { expiresIn: '15d' } // токен действителен 1 час
-  );
+  const token = jwt.sign({ id: user.id, email: user.email }, env.JWT_SECRET, {
+    expiresIn: '15d',
+  });
 
-  // 4️⃣ Возвращаем токен клиенту
   return token;
 };

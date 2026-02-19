@@ -9,4 +9,4 @@ const chatController = require('../controllers/chat.controller');
 router.post('/messages', authMiddleware, chatController.sendMessage);
 router.get('/conversations', authMiddleware, ChatConversations);
 
-module.exports = router; // ✅ именно module.exports
+module.exports = router; // ✅ exactly module.exports

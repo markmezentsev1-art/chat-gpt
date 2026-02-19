@@ -4,7 +4,7 @@ const { env } = require('../config/env');
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 
-  // 1. Проверка входных данных
+  // 1. Input validation
   if (!email || !password) {
     return res.status(400).json({
       message: 'Email and password are required',
@@ -12,7 +12,7 @@ exports.login = async (req, res) => {
   }
 
   try {
-    // 2. Логика логина
+    // 2. Login logic
     const token = await authService.login(email, password);
 
     return res.json({
@@ -26,12 +26,15 @@ exports.login = async (req, res) => {
 };
 exports.register = async (req, res) => {
   const { email, password } = req.body;
-  console.log(env.API_KEY); // ✅ проверка переменной окружения
-  // 1. Проверка входных данных
+  // ✅ environment variable check
+  // 1. Input validation
   if (!email || !password) {
     return res.status(400).json({
       message: 'Email and password are required',
     });
   }
-  res.status(200).json({ status: 'OK' });
+
+  await authService.register(email, password);
+
+  res.status(201).json({ status: 'User created' });
 };
