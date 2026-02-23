@@ -1,6 +1,5 @@
 // controllers/chat.controller.js
-const { sendMessageToAI } = require('../services/chat.service');
-const prisma = require('../config/prisma');
+const { processChat } = require('../services/chat.service');
 
 /**
  * POST /api/chat/messages
@@ -10,14 +9,14 @@ const prisma = require('../config/prisma');
 exports.sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
-    await prisma.user.findMany();
 
     // Check that message exists
     if (!message)
       return res.status(400).json({ message: 'Message is required' });
 
     // Send message to Bedrock
-    const aiResponse = await sendMessageToAI(message);
+    console.log('func:', processChat);
+    const aiResponse = await processChat(message);
 
     // Return response to client
     res.json({

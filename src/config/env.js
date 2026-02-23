@@ -8,6 +8,7 @@ const envSchema = z.object({
   AWS_SECRET_ACCESS_KEY: z.string().min(1, 'AWS_SECRET_ACCESS_KEY is required'),
   AWS_REGION: z.string().min(1, 'AWS_REGION is required'),
   API_KEY: z.string().min(4, 'key is required'),
+  OPENAI_API_KEY: z.string().min(4, 'OpenAI API key is required'),
 });
 
 const parsed = envSchema.safeParse(process.env);
