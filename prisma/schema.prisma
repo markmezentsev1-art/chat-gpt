@@ -13,4 +13,18 @@ model User {
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
+
+  messages  Message[]
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  userId      String
+  role        String   // "user" | "assistant" | "system"
+  content     String
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt(sort: Asc)])
 }

@@ -15,3 +15,7 @@ npm run format  # prettier
 npx prisma studio
 
 ```
+
+git add .
+git commit -m "added open ai"
+git push -u origin development

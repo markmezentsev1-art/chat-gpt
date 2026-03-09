@@ -15,7 +15,6 @@ exports.sendMessage = async (req, res) => {
       return res.status(400).json({ message: 'Message is required' });
 
     // Send message to Bedrock
-    console.log('func:', processChat);
     const aiResponse = await processChat(message);
 
     // Return response to client

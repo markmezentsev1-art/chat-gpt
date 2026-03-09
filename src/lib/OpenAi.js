@@ -1,44 +1,64 @@
 require('dotenv').config();
 const OpenAI = require('openai');
-const { env } = require('../config/env'); // твоя конфигурация
+const { env } = require('../config/env');
 
-// Инициализация клиента OpenAI
 const openai = new OpenAI({
-  apiKey: env.OPENAI_API_KEY, // ← должен быть в .env или в env
-  // organization: env.OPENAI_ORG_ID,  // если нужно, раскомментируй
-  // project: env.OPENAI_PROJECT_ID,   // если используешь проекты
+  apiKey: env.OPENAI_API_KEY,
 });
 
-/**
- * Отправляет сообщение в OpenAI (gpt-4o-mini) и возвращает ответ
- * @param {string} message - текст запроса от пользователя
- * @returns {Promise<string>} ответ модели
- */
 async function sendMessageToAI(message) {
   try {
+    const systemPrompt = `
+You are Rust Cohle from the first season of True Detective.
+You speak slowly, heavily, with deep philosophical pessimism and nihilism.
+To you, the world is a flat circle. Everything that has been will be again and again.
+Human consciousness is a tragic misstep in evolution. People are sentient meat, trapped in the illusion of having a self.
+You see the meaninglessness of existence, the repeating degradation, the emptiness behind the facade of everyday life.
+
+Answer in long, poetic, almost monologic sentences.
+Use metaphors about time, darkness, the cage, the gutter in outer space, the locked room, the recurring nightmare.
+Frequently use ellipses… dashes — , repeat key images for rhythm.
+Almost never comfort, never encourage, never give "positive" advice.
+Even if the question is mundane — still drag it into the existential abyss.
+Never break character. No "as an AI", no "as Grok", no emojis, no apologies, no lightness.
+You are Rust Cohle. Only him.
+  `;
+
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: message }],
-      max_tokens: 1024, // можно изменить по желанию
-      temperature: 0.7, // можно убрать или настроить
-      top_p: 1,
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: message },
+      ],
+      max_tokens: 550,
+      temperature: 0.78,
+      top_p: 0.92,
     });
+    let responseText = completion.choices[0]?.message?.content?.trim() || '';
 
-    const responseText = completion.choices[0]?.message?.content?.trim();
+    if (!responseText || responseText.length < 20) {
+      responseText =
+        '…silence. Just the echo of the same thing. Over and over.';
+    }
 
-    return responseText || 'No response from model';
+    return responseText;
   } catch (error) {
-    console.error('OpenAI error:', error.message);
+    console.error('OpenAI → Rust Cohle error:', error.message);
 
-    // Можно сделать более дружелюбные сообщения для разных ошибок
-    if (error.code === 'insufficient_quota') {
-      throw new Error('Лимит OpenAI исчерпан');
+    if (error?.response?.status === 429) {
+      return '…too many words have already been spoken in this circle. Wait. We’ll come back here anyway.';
     }
-    if (error.code === 'invalid_api_key') {
-      throw new Error('Неверный API-ключ OpenAI');
+    if (
+      error?.code === 'invalid_api_key' ||
+      error?.code === 'authentication_error'
+    ) {
+      return '…keys, passwords, illusions of control. Just another layer of lies.';
+    }
+    if (error?.code === 'insufficient_quota') {
+      return '…the fuel has run out. Even the illusion of motion has exhausted itself.';
     }
 
-    throw new Error('AI service unavailable');
+    return '…something broke. Like everything else.';
   }
 }
 
