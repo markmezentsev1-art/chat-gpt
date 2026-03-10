@@ -1,4 +1,4 @@
-const { env } = require('../config/env');
+import { env } from '../config/env.js';
 
 const checkApiKey = (req, res, next) => {
   const apiKeyFromHeader = req.headers['x-api-key'];
@@ -20,4 +20,4 @@ const checkApiKey = (req, res, next) => {
   next();
 };
 
-module.exports = checkApiKey;
+export default checkApiKey;

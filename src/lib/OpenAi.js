@@ -1,6 +1,6 @@
-require('dotenv').config();
-const OpenAI = require('openai');
-const { env } = require('../config/env');
+import 'dotenv/config'; // вместо require('dotenv').config()
+import OpenAI from 'openai';
+import { env } from '../config/env.js'; // ← обязательно .js в конце
 
 const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY,
@@ -62,4 +62,4 @@ You are Rust Cohle. Only him.
   }
 }
 
-module.exports = { sendMessageToAI };
+export { sendMessageToAI };

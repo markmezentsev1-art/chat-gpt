@@ -1,24 +1,24 @@
-//const { sendMessageToAI } = require('../lib/bedrock');
-const { sendMessageToAI } = require('../lib/OpenAi');
-const {
+//import { sendMessageToAI } from '../lib/bedrock.js';
+import { sendMessageToAI } from '../lib/OpenAi.js';
+import {
   createMessage,
   getLastFiveMessages,
-} = require('../repositories/message.repository');
+} from '../repositories/message.repository.js';
 
-async function processChat(message) {
-  // Сохраняем сообщение пользователя в БД
+export async function processChat(message, userId) {
+  // Save user message to DB
+  console.log('USER ID===:', userId);
   await createMessage({
     content: message,
     role: 'user',
-    // userId: '123', // временный ID, потом будет из JWT
+    userId, // use the userId from the request
   });
+  // Get last 5 messages for context (optional)
   const aiResponse = await sendMessageToAI(message);
   await createMessage({
     content: aiResponse,
     role: 'assistant',
-    // userId: '123', // временный ID, потом будет из JWT
+    userId, // use the userId from the request
   });
   return aiResponse;
 }
-
-module.exports = { processChat };

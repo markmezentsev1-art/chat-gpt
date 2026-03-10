@@ -1,10 +1,10 @@
-require('dotenv').config();
-const { TextDecoder } = require('util'); // For converting bytes to string
-const {
+import 'dotenv/config'; // вместо require('dotenv').config()
+import { TextDecoder } from 'util'; // встроенный модуль Node.js
+import {
   BedrockRuntimeClient,
   InvokeModelCommand,
-} = require('@aws-sdk/client-bedrock-runtime');
-const { env } = require('../config/env'); // Get data from configuration
+} from '@aws-sdk/client-bedrock-runtime';
+import { env } from '../config/env.js'; // ← обязательно .js в конце// Get data from configuration
 
 // Set up AWS Bedrock client
 const client = new BedrockRuntimeClient({
@@ -46,4 +46,4 @@ async function sendMessageToAI(message) {
   }
 }
 
-module.exports = { sendMessageToAI };
+export { sendMessageToAI };

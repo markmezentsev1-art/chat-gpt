@@ -1,4 +1,4 @@
-exports.getData = (req, res) => {
+export const getData = (req, res) => {
   const { name } = req.query;
 
   // Check: is the parameter present

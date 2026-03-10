@@ -1,7 +1,7 @@
-const authService = require('../services/auth.service');
-const { env } = require('../config/env');
+import * as authService from '../services/auth.service.js';
+import { env } from '../config/env.js';
 
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   const { email, password } = req.body;
 
   // 1. Input validation
@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
     });
   }
 };
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   const { email, password } = req.body;
   // ✅ environment variable check
   // 1. Input validation

@@ -1,8 +1,8 @@
-const express = require('express');
-const { login, register } = require('../controllers/auth.controller');
-const apiKeyMiddleware = require('../middlewares/apiKey.middleware');
+import express from 'express';
+import { login, register } from '../controllers/auth.controller.js';
+import apiKeyMiddleware from '../middlewares/apiKey.middleware.js';
 const router = express.Router();
 
 router.post('/login', login);
 router.post('/register', apiKeyMiddleware, register);
-module.exports = router;
+export default router;

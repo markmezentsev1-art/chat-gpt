@@ -1,18 +1,18 @@
-const prisma = require('../config/prisma');
+import prisma from '../config/prisma.js'; // ← обязательно .js в конце
 
-exports.createMessage = async (data) => {
+export const createMessage = async (data) => {
   return prisma.message.create({
     data,
   });
 };
 
-exports.findByUserId = async (userId) => {
+export const findByUserId = async (userId) => {
   return prisma.message.findMany({
     where: { userId },
   });
 };
 
-exports.getLastFiveMessages = async (userId) => {
+export const getLastFiveMessages = async (userId) => {
   return prisma.message.findMany({
     where: { userId },
     orderBy: {

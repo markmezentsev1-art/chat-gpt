@@ -1,6 +1,6 @@
 // middlewares/auth.middleware.js
-const jwt = require('jsonwebtoken');
-const { env } = require('../config/env');
+import jwt from 'jsonwebtoken';
+import { env } from '../config/env.js';
 
 function authenticateJWT(req, res, next) {
   const authHeader = req.headers['authorization'];
@@ -22,4 +22,4 @@ function authenticateJWT(req, res, next) {
 }
 
 // ✅ export the function directly
-module.exports = authenticateJWT;
+export default authenticateJWT;

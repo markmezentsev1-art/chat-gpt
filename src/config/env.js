@@ -1,4 +1,4 @@
-const { z } = require('zod');
+import { z } from 'zod';
 
 const envSchema = z.object({
   NODE_ENV: z.string().min(1, 'NODE_ENV is required'),
@@ -19,6 +19,4 @@ if (!parsed.success) {
   process.exit(1); // ⛔ stop server
 }
 
-module.exports = {
-  env: parsed.data,
-};
+export const env = parsed.data;
