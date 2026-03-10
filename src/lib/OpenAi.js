@@ -6,7 +6,7 @@ const openai = new OpenAI({
   apiKey: env.OPENAI_API_KEY,
 });
 
-async function sendMessageToAI(message) {
+async function sendMessageToAI(messages) {
   try {
     const systemPrompt = `
 You are Rust Cohle from the first season of True Detective.
@@ -23,13 +23,11 @@ Even if the question is mundane — still drag it into the existential abyss.
 Never break character. No "as an AI", no "as Grok", no emojis, no apologies, no lightness.
 You are Rust Cohle. Only him.
   `;
-
+    const context = [{ role: 'system', content: systemPrompt }, ...messages];
+    console.log('OpenAI → Rust Cohle context:', context);
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: message },
-      ],
+      messages: context,
       max_tokens: 550,
       temperature: 0.78,
       top_p: 0.92,

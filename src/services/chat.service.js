@@ -1,4 +1,6 @@
 //import { sendMessageToAI } from '../lib/bedrock.js';
+
+import e from 'express';
 import { sendMessageToAI } from '../lib/OpenAi.js';
 import {
   createMessage,
@@ -14,11 +16,13 @@ export async function processChat(message, userId) {
     userId, // use the userId from the request
   });
   // Get last 5 messages for context (optional)
-  const aiResponse = await sendMessageToAI(message);
+  const lastMessages = await getLastFiveMessages(userId);
+  const aiResponse = await sendMessageToAI(lastMessages);
   await createMessage({
     content: aiResponse,
     role: 'assistant',
     userId, // use the userId from the request
   });
+
   return aiResponse;
 }
