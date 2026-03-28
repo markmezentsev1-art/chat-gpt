@@ -16,5 +16,6 @@ npx prisma studio
 
 ```
 
-const result = sumNumbers([1, 3, 5])
-console.log(result); // 9
+git add .
+git commit -m "added open ai"
+git push -u origin development

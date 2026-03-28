@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const { env } = require('../config/env'); // ✅ take variables from our validator, not directly from process.env
-const userRepository = require('../repositories/user.repository');
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import { env } from '../config/env.js'; // ✅ take variables from our validator, not directly from process.env
+import * as userRepository from '../repositories/user.repository.js';
 // ❗️For now, no database — fake user
-exports.register = async (email, password) => {
+export const register = async (email, password) => {
   const existingUser = await userRepository.findByEmail(email);
 
   if (existingUser) {
@@ -18,7 +18,7 @@ exports.register = async (email, password) => {
   });
 };
 
-exports.login = async (email, password) => {
+export const login = async (email, password) => {
   const user = await userRepository.findByEmail(email);
 
   if (!user) {

@@ -1,12 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { ChatConversations, sendMessage } from '../controllers/chat.controller.js';
+import authMiddleware from '../middlewares/auth.middleware.js';
 const router = express.Router();
 
-const { ChatConversations } = require('../controllers/chat.controller');
-
-const authMiddleware = require('../middlewares/auth.middleware');
-const chatController = require('../controllers/chat.controller');
-
-router.post('/messages', authMiddleware, chatController.sendMessage);
+router.post('/messages', authMiddleware, sendMessage);
 router.get('/conversations', authMiddleware, ChatConversations);
 
-module.exports = router; // ✅ exactly module.exports
+export default router;

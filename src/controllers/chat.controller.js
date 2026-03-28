@@ -1,23 +1,22 @@
 // controllers/chat.controller.js
-const { sendMessageToAI } = require('../services/chat.service');
-const prisma = require('../config/prisma');
+import { processChat } from '../services/chat.service.js';
 
 /**
  * POST /api/chat/messages
  * Request body: { "message": "Hello" }
  * JWT required in Authorization
  */
-exports.sendMessage = async (req, res) => {
+export const sendMessage = async (req, res) => {
   try {
     const { message } = req.body;
-    await prisma.user.findMany();
-
+    console.log('user===:', req.user.id);
     // Check that message exists
+    const userId = req.user.id;
     if (!message)
       return res.status(400).json({ message: 'Message is required' });
 
     // Send message to Bedrock
-    const aiResponse = await sendMessageToAI(message);
+    const aiResponse = await processChat(message, userId);
 
     // Return response to client
     res.json({
@@ -34,6 +33,6 @@ exports.sendMessage = async (req, res) => {
     res.status(500).json({ message: 'AI service unavailable' });
   }
 };
-exports.ChatConversations = (req, res) => {
+export const ChatConversations = (req, res) => {
   res.status(200).json({ conversationId: '123123123123' });
 };

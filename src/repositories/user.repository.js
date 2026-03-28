@@ -1,18 +1,18 @@
-const prisma = require('../config/prisma');
+import prisma from '../config/prisma.js';
 
-exports.findByEmail = async (email) => {
+export const findByEmail = async (email) => {
   return prisma.user.findUnique({
     where: { email },
   });
 };
 
-exports.createUser = async (data) => {
+export const createUser = async (data) => {
   return prisma.user.create({
     data,
   });
 };
 
-exports.findById = async (id) => {
+export const findById = async (id) => {
   return prisma.user.findUnique({
     where: { id },
   });

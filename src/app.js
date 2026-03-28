@@ -1,20 +1,19 @@
 // Connect dotenv to load environment variables from .env
+import 'dotenv/config';
+import { env } from './config/env.js'; // our env validator (NODE_ENV, JWT_SECRET, PORT)
+import cors from 'cors';
+import express from 'express';
+import healthRoutes from './routes/health.routes.js'; // health check
+import authRoutes from './routes/auth.routes.js'; // login/registration
+import chatRoutes from './routes/chat.routes.js'; // chat endpoints
 
-require('dotenv').config();
-const { env } = require('./config/env'); // our env validator (NODE_ENV, JWT_SECRET, PORT)
-const cors = require('cors');
-// Connect express
-const express = require('express');
 const app = express();
 
 // Allows reading JSON from request body (req.body)
 app.use(express.json());
 app.use(cors());
 
-// Connect routes
-const healthRoutes = require('./routes/health.routes'); // health check
-const authRoutes = require('./routes/auth.routes'); // login/registration
-const chatRoutes = require('./routes/chat.routes'); // chat endpoints
+// Connect routes (already imported above)
 
 // ALL endpoints start with /api
 app.use('/api', healthRoutes); // GET /api/health
